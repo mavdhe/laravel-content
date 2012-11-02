@@ -13,13 +13,17 @@ class Content
 		$struc = new Content();
 		$struc->load();
 
-		$strucPage = $struc->findPage($uri);
-
-		if ($strucPage == null) {
-			return Response::error('404');
+		if ($uri == 'sitemap.xml') {
+			return $struc->getSitemap();
 		} else {
-			$data = array('page' => $strucPage);
-	    	return View::make($strucPage->getTemplate(), $data);
+			$strucPage = $struc->findPage($uri);
+
+			if ($strucPage == null) {
+				return Response::error('404');
+			} else {
+				$data = array('page' => $strucPage);
+		    	return View::make($strucPage->getTemplate(), $data);
+			}
 		}
 	}
 
@@ -46,6 +50,13 @@ class Content
 			$page->properties = $jsonPage;
 			array_push($this->pages, $page);
 		}
+    }
+
+    private function getSitemap()
+    {
+		$data = array('pages' => $this->pages);
+		$headers['Content-Type'] = 'text/xml; charset=utf-8';
+    	return Response::make(Response::View('content::sitemap', $data), 200, $headers);
     }
 
     private function findPage($uri) 
