@@ -172,7 +172,17 @@ An example Blade view for a slideshow could look like this:
 
 ### Filtering
 
--TODO-
+Filtering pages is easy. Just call `Content::getPages` with a path filter.
+This allows you to create menus or lists for example.
+
+```php
+$articles = Content::getPages('articles/');
+
+$txt = '';
+foreach ($articles as $article) {
+	$txt = $txt.'<a href="'.$article->properties['path'].'">'.$article->getTitle().'</a><br>';
+}
+```
 
 ### Handling the index page
 
