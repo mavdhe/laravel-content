@@ -13,17 +13,13 @@ class Content
 		$struc = new Content();
 		$struc->load();
 
-		if ($uri == 'sitemap.xml') {
-			return $struc->getSitemap();
-		} else {
-			$strucPage = $struc->findPage($uri);
+		$strucPage = $struc->findPage($uri);
 
-			if ($strucPage == null) {
-				return Response::error('404');
-			} else {
-				$data = array('page' => $strucPage);
-		    	return View::make($strucPage->getTemplate(), $data);
-			}
+		if ($strucPage == null) {
+			return Response::error('404');
+		} else {
+			$data = array('page' => $strucPage);
+	    	return View::make($strucPage->getTemplate(), $data);
 		}
 	}
 
@@ -40,6 +36,29 @@ class Content
 		return $pages;
 	}
 
+    public static function getSitemap()
+    {
+		$struc = new Content();
+		$struc->load();
+
+		$urls = array();
+		foreach ($struc->pages as $page) {
+			$url['loc'] = URL::base().'/'.$page->properties['path'];
+			if (array_key_exists('priority', $page->properties)) {
+        		$url['priority'] = $page->properties['priority'];
+        	}
+        	if (array_key_exists('lastmod', $page->properties)) {
+        		$url['lastmod'] = $page->properties['lastmod'];
+        	}
+        	if (array_key_exists('changefreq', $page->properties)) {
+        		$url['changefreq'] = $page->properties['changefreq'];
+        	}
+        	$urls[] = $url;
+		}
+
+		return $urls;
+    }
+
     private function load() 
     {
         $path = path('storage').'content/content.json';
@@ -50,13 +69,6 @@ class Content
 			$page->properties = $jsonPage;
 			array_push($this->pages, $page);
 		}
-    }
-
-    private function getSitemap()
-    {
-		$data = array('pages' => $this->pages);
-		$headers['Content-Type'] = 'text/xml; charset=utf-8';
-    	return Response::make(Response::View('content::sitemap', $data), 200, $headers);
     }
 
     private function findPage($uri) 

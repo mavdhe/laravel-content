@@ -11,7 +11,7 @@ Features:
 - No database needed.
 - Customizable with user-defined properties.
 - Filter functions.
-- Automatic sitemap generator.
+- Sitemap data generator.
 
 ## Installation
 
@@ -136,11 +136,14 @@ Define the properties:
 Get the properties with **$page->getValue('key')**. If a property does not exist for a page
 *getValue()* will return null so that your template can easily handle non-defined properties.
 
-### Sitemap generator
+### Sitemap data generator
 
-The *Content* bundle automatically creates a sitemap ('sitemap.xml'). The following (optional)
-page properties will be passed to the sitemap: *priority*, *lastmod* and *changefreq*. You
-can find more information about sitemaps and these properties at [http://www.sitemaps.org/]().
+The *Content* bundle can create an array of sitemap data. You can use this data 
+to generate a sitemap, or you can feed the data into the Sitemapper bundle to create a
+sitemap automatically.
+The following optional page properties will be passed to the sitemap: 
+*priority*, *lastmod* and *changefreq*.
+You can find more information about sitemaps and these properties at [http://www.sitemaps.org/]().
 
 ### Filtering
 
