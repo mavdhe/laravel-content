@@ -49,5 +49,25 @@ class Page
 			$value = $this->properties[$key];
 		return $value;
 	}
-}
 
+	public function getImages()
+	{
+		$imgs = array();
+
+		$imgsPath = 'img/content/'.$this->properties['path'];
+		$searchPath = path('public').$imgsPath.'/*.jpg';
+		$files = glob($searchPath);
+		foreach ($files as $filename) {
+			$file = pathinfo($filename, PATHINFO_BASENAME);
+			$match = preg_match('/_sml.jpg$/', $filename);
+			if ($match == 0) {
+				$imgs[] = array(
+					'normal' => '/'.$imgsPath.'/'.$file, 
+					'small' => '/'.$imgsPath.'/'.preg_replace('/.jpg$/', '_sml.jpg', $file)
+				);
+			}
+		}
+
+		return $imgs;
+	}
+}

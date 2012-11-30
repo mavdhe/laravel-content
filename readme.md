@@ -11,6 +11,7 @@ Features:
 - No database needed.
 - Customizable with user-defined properties.
 - Filter functions.
+- Image array generator for images related to a page.
 - Sitemap data generator.
 
 ## Installation
@@ -145,6 +146,30 @@ The following optional page properties will be passed to the sitemap:
 *priority*, *lastmod* and *changefreq*.
 You can find more information about sitemaps and these properties at [http://www.sitemaps.org/]().
 
+### Image array generator
+
+Another feature of this bundle is to generate arrays of images that correspond to a page. 
+
+For example let's say you have defined a page with the path *projects/time-machine* in the contents.json file
+and in your view you want to show all the photos of this fantastic time machine.
+To do this you have to create the following folder *[public]/img/content/[path]*, so in this case
+*public/img/content/projects/time-machine*. Then put your images in this directory. Now you
+can call `$page->getImages()` to get an array containing the paths to the images.
+As a bonus you can also add thumbnails by creating images that end with *_sml*. For example if you 
+have an image called 'the-time-machine.jpg' then the thumbnail should be called 'the-time-machine_sml.jpg'.
+
+An example Blade view for a slideshow could look like this:
+
+```php
+@foreach ($page->getImages() as $img)
+<div class="gallery-image">
+	<a href="{{ $img['normal'] }}" rel="photos"> 
+		<img src="{{ $img['small'] }}" width="160" height="120">
+	</a>
+</div>
+@endforeach
+```
+
 ### Filtering
 
 -TODO-
@@ -175,8 +200,11 @@ And create your root content file at *storage/content/index/page.md*.
 
 ## Roadmap
 
-In the future I would like to add functions for iterating over the parents and 
-children of a page and add functions for sorting.  
+Ideas:
+
+- Functions for iterating over the parents and children of a page (to easily create menus).
+- Turn the image generator array into an asset generator array to allow other extensions.
+
 Pull requests are welcome!
 
 ## License
