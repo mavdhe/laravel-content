@@ -99,8 +99,12 @@ The view used to render the page can be overridden by defining a property called
 
 ```javascript
 {
-	"path": "projects",
-	"template": "mypage"
+	"pages": [
+		{
+			"path": "projects",
+			"template": "mypage"
+		}
+	]
 }
 ```
 
@@ -112,8 +116,12 @@ This behaviour can be overridden by defining a property called *title*:
 
 ```javascript
 {
-	"path": "projects/iphone-game",
-	"title": "iPhone game"
+	"pages": [
+		{
+			"path": "projects/iphone-game",
+			"title": "iPhone game"
+		}
+	]
 }
 ```
 
@@ -126,11 +134,15 @@ Define the properties:
 
 ```javascript
 {
-	"path": "projects/time-machine",
-	"description": "a short meta description",
-	"comments": true,
-	"disqusid": "XXX-YYY-ZZZ",
-	"script-id": "time-machine"
+	"pages": [
+		{
+			"path": "projects/time-machine",
+			"description": "a short meta description",
+			"comments": true,
+			"disqusid": "XXX-YYY-ZZZ",
+			"script-id": "time-machine"
+		}
+	]
 }
 ```
 
@@ -146,28 +158,61 @@ The following optional page properties will be passed to the sitemap:
 *priority*, *lastmod* and *changefreq*.
 You can find more information about sitemaps and these properties at [http://www.sitemaps.org/]().
 
-### Image array generator
+### Assets array generator
 
-Another feature of this bundle is to generate arrays of images that correspond to a page. 
+Another feature of this bundle is to generate arrays of assets that belong to a page. 
 
-For example let's say you have defined a page with the path *projects/time-machine* in the contents.json file
-and in your view you want to show all the photos of this fantastic time machine.
-To do this you have to create the following folder *[public]/img/content/[path]*, so in this case
-*public/img/content/projects/time-machine*. Then put your images in this directory. Now you
-can call `$page->getImages()` to get an array containing the paths to the images.
-As a bonus you can also add thumbnails by creating images that end with *_sml*. For example if you 
-have an image called 'the-time-machine.jpg' then the thumbnail should be called 'the-time-machine_sml.jpg'.
+For example, let's assume you have defined a page with the path *projects/time-machine* in the contents.json file
+and in that view you want to show all the photos of this fantastic time machine.
+To do so you have to create a folder under your public folder where you put the images. Next, make a page 
+reference in your contents.json file to this folder. You can call this reference anything you like.
+
+The example below shows two different asset sets: *img* and *pdf*.
+
+```javascript
+{
+	"pages": [
+		{
+			"path": "projects/time-machine",
+			"img": "img/tm-photos",
+		},
+		{
+			"path": "projects/a-project-without-assets",
+		},
+		{
+			"path": "projects/a-project-with-multiple-assets",
+			"img": "img/great-photos",
+			"pdf": "various/pdf"
+		}
+	]
+}
+```
+
+Now calling the function `$page->getAssets([your-asset-set])` will return an array of files located in the
+given folder.  
+Each array element contains two values, one for the key *normal* and one for the key *small*. Under normal
+circumstances, only the *normal* value will have a value. The *small* key will only be filled when a file
+end with the name *_sml*. This makes it easy to define sets of images with a small thumbnail. So for 
+example if you have an image called 'the-time-machine.jpg' and a thumbnail called 'the-time-machine_sml.jpg'
+they will appear in the same array set.
 
 An example Blade view for a slideshow could look like this:
 
 ```php
-@foreach ($page->getImages() as $img)
-<div class="gallery-image">
-	<a href="{{ $img['normal'] }}" rel="photos"> 
-		<img src="{{ $img['small'] }}" width="160" height="120">
-	</a>
+<?php $assets = $page->getAssets('img'); ?>
+@if (count($assets) > 0)
+<div class="gallery-container">
+	<ul class="gallery clearfix">
+		@foreach ($assets as $img)
+		<li class="gallery-image">
+			<a href="{{ $img['normal'] }}" rel="photos"> 
+				<img src="{{ $img['small'] }}" width="160" height="120">
+			</a>
+		</li>
+		@endforeach
+	</ul>
 </div>
-@endforeach
+@endif
 ```
 
 ### Filtering
@@ -176,12 +221,24 @@ Filtering pages is easy. Just call `Content::getPages` with a path filter.
 This allows you to create menus or lists for example.
 
 ```php
-$articles = Content::getPages('articles/');
+Route::get('guides', function () {
+	$guides = Content::getPages('guides/');
+	
+	$txt = '<div class="guides">';
+	foreach ($guides as $guide) {
+		$txt = $txt.'<b><a href="'.$guide->properties['path'].'">'.$guide->getTitle().'</a></b> - ';
+		$txt = $txt.$guide->properties['description'];
+		$txt = $txt.'<br><br>';
+	}
+	$txt = $txt.'</div>';
 
-$txt = '';
-foreach ($articles as $article) {
-	$txt = $txt.'<a href="'.$article->properties['path'].'">'.$article->getTitle().'</a><br>';
-}
+	$page = new Page();
+	$page->properties['path'] = 'guides';
+	$page->properties['content'] = $txt;
+
+	$data = array('page' => $page);
+    return View::make('page', $data);
+});
 ```
 
 ### Handling the index page
@@ -192,7 +249,11 @@ Add a page with a path named *index*.
 
 ```javascript
 {
-	"path": "index"
+	"pages": [
+		{
+			"path": "index"
+		}
+	]
 }
 ```
 
