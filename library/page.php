@@ -50,24 +50,27 @@ class Page
 		return $value;
 	}
 
-	public function getImages()
+	public function getAssets($key)
 	{
-		$imgs = array();
+		$assets = array();
 
-		$imgsPath = 'img/content/'.$this->properties['path'];
-		$searchPath = path('public').$imgsPath.'/*.jpg';
-		$files = glob($searchPath);
-		foreach ($files as $filename) {
-			$file = pathinfo($filename, PATHINFO_BASENAME);
-			$match = preg_match('/_sml.jpg$/', $filename);
-			if ($match == 0) {
-				$imgs[] = array(
-					'normal' => '/'.$imgsPath.'/'.$file, 
-					'small' => '/'.$imgsPath.'/'.preg_replace('/.jpg$/', '_sml.jpg', $file)
-				);
+		if (array_key_exists($key, $this->properties)) {
+			$assetsPath = $this->properties[$key];
+			$searchPath = path('public').$assetsPath.'/*.*';
+			$files = glob($searchPath);
+			foreach ($files as $filename) {
+				$file = pathinfo($filename, PATHINFO_BASENAME);
+				$ext = pathinfo($filename, PATHINFO_EXTENSION);
+				$match = preg_match('/_sml.'.$ext.'$/', $filename);
+				if ($match == 0) {
+					$assets[] = array(
+						'normal' => '/'.$assetsPath.'/'.$file, 
+						'small' => '/'.$assetsPath.'/'.preg_replace('/.'.$ext.'$/', '_sml.'.$ext, $file)
+					);
+				}
 			}
 		}
 
-		return $imgs;
-	}
+		return $assets;
+	}	
 }
