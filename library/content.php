@@ -36,6 +36,10 @@ class Content
 		return $pages;
 	}
 
+	/**
+	 * Returns an array of all the pages with the properties that can be used in a sitemap
+	 * (loc, priority, lastmod, changefreq).
+	 */
     public static function getSitemap()
     {
 		$struc = new Content();
@@ -59,6 +63,9 @@ class Content
 		return $urls;
     }
 
+    /**
+     * Loads the content file and turns the content into page objects (object property $pages).
+     */
     private function load() 
     {
         $path = path('storage').'content/content.json';
@@ -71,6 +78,11 @@ class Content
 		}
     }
 
+    /**
+     * Returns the Page where the path property equals $uri.
+     * @param  string $uri The $uri of the page to find.
+     * @return Page The page specified by $uri, or null if the page is not in the collection.
+     */
     private function findPage($uri) 
     {
     	$page = null;
@@ -82,6 +94,11 @@ class Content
 		return $page;
 	}
 
+	/**
+	 * Returns the pages that contain the uri as part of the path property.
+	 * @param  string $uri URI to match.
+	 * @return array An array of the pages that match the URI.
+	 */
     private function findPages($uri) 
     {
     	$foundPages = array();

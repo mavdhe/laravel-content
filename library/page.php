@@ -4,8 +4,16 @@ require_once __DIR__.'/markdown.php';
 
 class Page 
 {
+	/**
+	 * All properties of the page.
+	 * @var array All properties of the page.
+	 */
 	public $properties;
 
+	/**
+	 * Returns the name of the template to be used for the page. If the user didn't specify a template name, 'page' is used.
+	 * @return string Name of the page template.
+	 */
 	public function getTemplate()
 	{
 		$template = 'page';
@@ -15,6 +23,11 @@ class Page
 		return $template;
 	}
 
+	/**
+	 * Returns the title of the page. If a 'title' property exists, that value will be used,
+	 * otherwise the title will be created based on the path.
+	 * @return string Title of the page.
+	 */
 	public function getTitle() 
 	{
 		$title = '';
@@ -28,6 +41,10 @@ class Page
 		return $title;
 	}
 
+	/**
+	 * Returns the Markdown parsed content of the page.
+	 * @return string Page content.
+	 */
 	public function getContent() 
 	{
 		$content = '';
@@ -42,6 +59,12 @@ class Page
 		return $content;
 	}
 
+	/**
+	 * Returns the value of the property with the key $key, or returns null if the 
+	 * property does not exist.
+	 * @param  string $key Property identifier.
+	 * @return string Value of the property or null.
+	 */
 	public function getValue($key) 
 	{
 		$value = null;
@@ -50,6 +73,12 @@ class Page
 		return $value;
 	}
 
+	/**
+	 * Returns the assets that belong to the property with the key $key.
+	 * @param  string $key Property identifier.
+	 * @return array An array where each element has a 'normal' and a 'small' key to idendify the location
+	 * of the assets.
+	 */
 	public function getAssets($key)
 	{
 		$assets = array();
