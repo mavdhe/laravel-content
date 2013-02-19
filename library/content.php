@@ -38,7 +38,8 @@ class Content
 
 	/**
 	 * Returns an array of all the pages with the properties that can be used in a sitemap
-	 * (loc, priority, lastmod, changefreq).
+	 * (loc, priority, lastmod, changefreq), for all the pages that do not have the
+	 * 'visible' attribute set to false.
 	 */
     public static function getSitemap()
     {
@@ -47,17 +48,24 @@ class Content
 
 		$urls = array();
 		foreach ($struc->pages as $page) {
-			$url['loc'] = URL::base().'/'.$page->properties['path'];
-			if (array_key_exists('priority', $page->properties)) {
-        		$url['priority'] = $page->properties['priority'];
-        	}
-        	if (array_key_exists('lastmod', $page->properties)) {
-        		$url['lastmod'] = $page->properties['lastmod'];
-        	}
-        	if (array_key_exists('changefreq', $page->properties)) {
-        		$url['changefreq'] = $page->properties['changefreq'];
-        	}
-        	$urls[] = $url;
+			$visible = true;
+			if (array_key_exists('visible', $page->properties)) {
+				$visible = ($page->properties['visible'] == 'true');
+			}			
+
+			if ($visible) {
+				$url['loc'] = URL::base().'/'.$page->properties['path'];
+				if (array_key_exists('priority', $page->properties)) {
+	        		$url['priority'] = $page->properties['priority'];
+	        	}
+	        	if (array_key_exists('lastmod', $page->properties)) {
+	        		$url['lastmod'] = $page->properties['lastmod'];
+	        	}
+	        	if (array_key_exists('changefreq', $page->properties)) {
+	        		$url['changefreq'] = $page->properties['changefreq'];
+	        	}
+	        	$urls[] = $url;
+			}
 		}
 
 		return $urls;
