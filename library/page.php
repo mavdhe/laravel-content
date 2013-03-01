@@ -60,6 +60,19 @@ class Page
 	}
 
 	/**
+	 * Returns if the page should be visisble.
+	 * @return bool Visibility of the page.
+	 */
+	public function getVisible()
+	{
+		$visible = true;
+		if (array_key_exists('visible', $this->properties)) {
+			$visible = ($this->properties['visible'] == 'true');
+		}
+		return $visible;
+	}
+
+	/**
 	 * Returns the value of the property with the key $key, or returns null if the 
 	 * property does not exist.
 	 * @param  string $key Property identifier.

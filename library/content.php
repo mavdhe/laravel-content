@@ -48,12 +48,7 @@ class Content
 
 		$urls = array();
 		foreach ($struc->pages as $page) {
-			$visible = true;
-			if (array_key_exists('visible', $page->properties)) {
-				$visible = ($page->properties['visible'] == 'true');
-			}			
-
-			if ($visible) {
+			if ($page->getVisible()) {
 				$url['loc'] = URL::base().'/'.$page->properties['path'];
 				if (array_key_exists('priority', $page->properties)) {
 	        		$url['priority'] = $page->properties['priority'];
