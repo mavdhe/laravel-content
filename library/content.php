@@ -1,12 +1,20 @@
 <?php
 
+/**
+ * Content.
+ */
 class Content 
 {
+	/**
+	 * @var array Collection of pages.
+	 */
 	private $pages = array();
 
 	/**
 	 * Creates and returns a view based on the URI. Returns 404 if there is no valid content
 	 * definition for the given URI.
+	 *
+	 * @param string URI to make the view for.
 	 */
 	public static function makeView($uri)
 	{
@@ -25,6 +33,9 @@ class Content
 
 	/**
 	 * Returns the pages that contain the URI in their path.
+	 * 
+	 * @param  string $uri The URI to check.
+	 * @return array       Pages that contain the URI in their path.
 	 */
 	public static function getPages($uri)
 	{
@@ -40,6 +51,8 @@ class Content
 	 * Returns an array of all the pages with the properties that can be used in a sitemap
 	 * (loc, priority, lastmod, changefreq), for all the pages that do not have the
 	 * 'visible' attribute set to false.
+	 * 
+	 * @return array An array of pages with sitemap relevant properties.
 	 */
     public static function getSitemap()
     {
@@ -83,6 +96,7 @@ class Content
 
     /**
      * Returns the Page where the path property equals $uri.
+     * 
      * @param  string $uri The $uri of the page to find.
      * @return Page The page specified by $uri, or null if the page is not in the collection.
      */
@@ -99,6 +113,7 @@ class Content
 
 	/**
 	 * Returns the pages that contain the uri as part of the path property.
+	 * 
 	 * @param  string $uri URI to match.
 	 * @return array An array of the pages that match the URI.
 	 */
