@@ -1,6 +1,6 @@
 # Content - Laravel 3 bundle
 
-[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+[![Not maintained](https://img.shields.io/badge/maintained-no-red.svg)]()
 
 ***Content* is a text-based CMS bundle for the [Laravel PHP Framework (version 3)](http://laravel.com)**.  
 It uses a JSON file to describe the site structure, (custom) page properties and page assets. 
